@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Osama Said — AI QA Engineer & LLM Evaluator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<!-- استدعاء خطوط مميزة واحترافية جداً للغة الإنجليزية والعربية -->
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background:#EDEAE2;
+  color:#1C1B18;
+  line-height:1.6;
+  overflow-x:hidden;
+  transition:background .3s, color .3s;
+}
+:root{
+  --cream:#EDEAE2;--ink:#1C1B18;--ink-soft:#5A5650;
+  --terra:#C94F2A;--terra-h:#E06238;
+  --card:#F4F1EA;--border:#D4CFC5;--mono:'Space Grotesk', monospace;
+  --whatsapp:#25D366;--whatsapp-h:#20ba5a;
+}
+/* 🌟 تحسينات الوضع الليلي لزيادة الوضوح والتباين الفخم */
+body.dark{
+  --cream:#12110F;
+  --ink:#F5F2EB;
+  --ink-soft:#B5AFA5; /* لون نص فاتح وواضح جداً في الظلام */
+  --card:#1A1916;     /* كروت واضحة ومنفصلة عن الخلفية */
+  --border:#2E2C27;   /* حدود واضحة تفصل العناصر عن بعضها */
+  background:#12110F;
+  color:#F5F2EB;
+}
+
+/* تحسين الخطوط والتنسيق عند التحويل للعربية */
+html[lang="ar"] body {
+  font-family: 'Cairo', sans-serif;
+}
+
+/* خلفية الشبكة الهندسية العصريّة */
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(to right,rgba(0,0,0,.04) 1px,transparent 1px),linear-gradient(to bottom,rgba(0,0,0,.04) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
+body.dark::before{background-image:linear-gradient(to right,rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(to bottom,rgba(255,255,255,.025) 1px,transparent 1px)}
+
+.wrap{max-width:1140px;margin:0 auto;padding:0 24px;position:relative;z-index:1}
+
+/* القائمة العلوية (Navigation) */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:20px 0;transition:all .3s}
+nav.scrolled{background:rgba(237,234,226,.9);backdrop-filter:blur(12px);padding:14px 0;border-bottom:1px solid var(--border)}
+body.dark nav.scrolled{background:rgba(18,17,15,.95);border-bottom:1px solid var(--border)}
+.nav-in{display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.25rem;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:8px;letter-spacing:-.03em}
+html[lang="ar"] .logo { font-family: 'Cairo', sans-serif; font-weight: 800; }
+.logo-dot{width:8px;height:8px;border-radius:50%;background:var(--terra);flex-shrink:0}
+.nav-links{display:flex;gap:32px;list-style:none}
+.nav-links a{font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);text-decoration:none;transition:color .2s}
+html[lang="ar"] .nav-links a { font-size: 0.85rem; letter-spacing: 0; }
+.nav-links a:hover{color:var(--terra)}
+.nav-controls{display:flex;align-items:center;gap:10px}
+.theme-btn, .lang-btn{background:none;border:1.5px solid var(--border);height:36px;border-radius:18px;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;color:var(--ink);transition:all .2s;padding: 0 14px; font-weight:700; font-family:inherit;}
+.theme-btn{width:36px;border-radius:50%;padding:0;}
+.theme-btn:hover, .lang-btn:hover{background:var(--terra);border-color:var(--terra);color:#fff}
+
+/* قائمة التنقل السفلية للجوال (Mobile Bottom Nav) */
+.mobile-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(237, 234, 226, 0.95);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid var(--border);
+  display: none;
+  justify-content: space-around;
+  padding: 10px 0;
+  z-index: 999;
+  box-shadow: 0 -4px 12px rgba(0,0,0,0.05);
+}
+body.dark .mobile-nav {
+  background: rgba(18, 17, 15, 0.95);
+  border-top: 1px solid var(--border);
+}
+.mobile-nav a {
+  color: var(--ink-soft);
+  text-decoration: none;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+html[lang="ar"] .mobile-nav a {
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.75rem;
+}
+.mobile-nav a svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
+}
+.mobile-nav a:hover, .mobile-nav a.active {
+  color: var(--terra);
+}
+
+/* قسم الواجهة الرئيسية (Hero) */
+#hero{min-height:100vh;display:flex;align-items:center;padding:140px 0 80px}
+.hero-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:60px;align-items:center;width:100%}
+.hero-eyebrow{font-size:.75rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:20px;display:flex;align-items:center;gap:12px}
+html[lang="ar"] .hero-eyebrow { font-size: 0.8rem; letter-spacing: 0; }
+.hero-eyebrow::before{content:'';width:30px;height:2px;background:var(--terra);flex-shrink:0}
+
+.hero-h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(2.4rem,4.8vw,4.2rem);line-height:1.1;letter-spacing:-.03em;color:var(--ink);margin-bottom:24px;}
+html[lang="ar"] .hero-h1 { font-family: 'Cairo', sans-serif; font-weight: 800; letter-spacing: 0; line-height: 1.3;}
+.hero-h1 .acc{color:var(--terra)}
+
+.hero-p{font-size:1.05rem;color:var(--ink-soft);max-width:520px;line-height:1.7;margin-bottom:32px}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap}
+
+/* الأزرار الأساسية وأزرار التواصل */
+.btn-p{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;background:var(--terra);color:#fff;font-size:.85rem;font-weight:700;letter-spacing:.02em;text-decoration:none;border-radius:4px;transition:background .2s,transform .15s}
+.btn-p:hover{background:var(--terra-h);transform:translateY(-2px)}
+
+/* تحسين صورة الشخصية وإطارها */
+.hero-img-wrap{
+  position:relative;
+  width:280px; 
+  height:280px;
+  margin:0 auto;
+  border-radius:50%; 
+  padding:8px; 
+  border: 3px double var(--border); 
+  background: var(--card);
+  transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+}
+.hero-img-wrap:hover {
+  transform: scale(1.03) rotate(1deg);
+  border-color: var(--terra);
+  box-shadow: 0px 15px 30px rgba(201, 79, 42, 0.15);
+}
+.hero-img-wrap img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:50%; 
+  display:block;
+}
+.hero-img-tag{position:absolute;bottom:0px;right:0px;background:var(--ink);color:var(--cream);font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;padding:8px 14px;font-weight:700;border-radius:20px;box-shadow: 0 4px 10px rgba(0,0,0,0.15)}
+body.dark .hero-img-tag { background: #fff; color: #000; }
+html[lang="ar"] .hero-img-tag { right: auto; left:0px; letter-spacing: 0; font-size: 0.75rem; }
+
+/* تنسيقات الأقسام العامة */
+section{padding:100px 0;position:relative;z-index:1}
+section+section{border-top:1px solid var(--border)}
+.sec-no{font-family:var(--mono);font-size:.75rem;color:var(--terra);letter-spacing:.15em;display:block;margin-bottom:12px;font-weight:700}
+.sec-title{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(1.8rem,3.2vw,2.6rem);letter-spacing:-.02em;color:var(--ink);margin-bottom:48px;line-height:1.2}
+html[lang="ar"] .sec-title { font-family: 'Cairo', sans-serif; font-weight: 800; letter-spacing: 0; }
+
+/* قسم نبذة عني */
+.about-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:60px;align-items:start}
+.about-body p{color:var(--ink-soft);line-height:1.75;font-size:1.02rem;margin-bottom:20px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--border);border:2px solid var(--border);border-radius:8px;overflow:hidden}
+.stat{background:var(--card);padding:26px 20px;text-align:center}
+.stat-v{font-family:'Space Grotesk',sans-serif;font-size:1.8rem;font-weight:700;color:var(--ink);display:block;line-height:1}
+html[lang="ar"] .stat-v { font-family: 'Cairo', sans-serif; font-weight:800; }
+.stat-l{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);margin-top:8px;display:block;font-weight:600}
+html[lang="ar"] .stat-l { letter-spacing: 0; font-size: 0.75rem; }
+
+/* قسم المهارات */
+.skills-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--border);border-radius:8px;overflow:hidden}
+.sk-card{background:var(--card);padding:36px 28px;transition:background .2s}
+.sk-card:hover{background:#fff}
+body.dark .sk-card:hover{background:#22201C}
+.sk-head{font-family:'Space Grotesk',sans-serif;font-size:1.05rem;font-weight:700;color:var(--ink);margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+html[lang="ar"] .sk-head { font-family: 'Cairo', sans-serif; font-weight: 700; }
+.sk-head span{display:block;font-size:.65rem;color:var(--terra);letter-spacing:.12em;text-transform:uppercase;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;margin-bottom:6px}
+html[lang="ar"] .sk-head span { letter-spacing: 0; font-size: 0.75rem; }
+.sk-list{list-style:none;display:flex;flex-direction:column;gap:12px}
+.sk-list li{font-size:.9rem;color:var(--ink-soft);display:flex;gap:10px;line-height:1.5;font-weight:500}
+.sk-list li::before{content:'→';color:var(--terra);flex-shrink:0;font-weight:bold}
+html[lang="ar"] .sk-list li::before { content: '←'; }
+
+/* قسم الخبرات المهنية */
+.exp-list{display:flex;flex-direction:column;gap:2px;background:var(--border);border-radius:8px;overflow:hidden}
+.exp-item{background:var(--card);padding:40px;display:grid;grid-template-columns:1fr auto;gap:30px;align-items:start;transition:background .2s}
+.exp-item:hover{background:#fff}
+body.dark .exp-item:hover{background:#22201C}
+.exp-role{font-family:'Space Grotesk',sans-serif;font-size:1.2rem;font-weight:700;color:var(--ink);margin-bottom:6px}
+html[lang="ar"] .exp-role { font-family: 'Cairo', sans-serif; font-weight: 700; }
+.exp-co{font-size:.95rem;color:var(--terra);font-weight:700;margin-bottom:4px}
+.exp-note{font-size:.82rem;color:var(--ink-soft);font-style:italic;margin-bottom:18px;display:inline-block;padding:2px 8px;background:rgba(201, 79, 42, 0.08);border-radius:4px}
+body.dark .exp-note { background: rgba(201, 79, 42, 0.2); color: #FF9E80; }
+.exp-loc{font-family:var(--mono);font-size:.75rem;color:var(--ink-soft);margin-bottom:16px;opacity:.8}
+.exp-period{font-family:var(--mono);font-size:.78rem;color:var(--ink-soft);white-space:nowrap;text-align:right;padding-top:4px;font-weight:700}
+html[lang="ar"] .exp-period { text-align: left; }
+.exp-resp{list-style:none;display:flex;flex-direction:column;gap:10px}
+.exp-resp li{font-size:.92rem;color:var(--ink-soft);display:flex;gap:12px;line-height:1.6}
+.exp-resp li::before{content:'•';color:var(--terra);flex-shrink:0;font-size:1.2rem;line-height:1}
+
+/* قسم التعليم واللغات */
+.edu-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:2px;background:var(--border);border-radius:8px;overflow:hidden}
+.edu-card{background:var(--card);padding:40px}
+.edu-card-title{font-family:'Space Grotesk',sans-serif;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.15em;color:var(--terra);margin-bottom:32px}
+html[lang="ar"] .edu-card-title { font-family: 'Cairo', sans-serif; letter-spacing: 0; font-size: 0.85rem; }
+.edu-entry{margin-bottom:28px;padding-bottom:28px;border-bottom:1px solid var(--border)}
+.edu-entry:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
+.edu-deg{font-family:'Space Grotesk',sans-serif;font-size:1.05rem;font-weight:700;color:var(--ink);margin-bottom:6px}
+html[lang="ar"] .edu-deg { font-family: 'Cairo', sans-serif; font-weight: 700; }
+.edu-school{font-size:.9rem;color:var(--terra);font-weight:600;margin-bottom:6px}
+.edu-yr{font-family:var(--mono);font-size:.75rem;color:var(--ink-soft);opacity:.8}
+.lang-row{display:flex;justify-content:space-between;align-items:center;padding:18px 0;border-bottom:1px solid var(--border)}
+.lang-row:last-child{border-bottom:none}
+.lang-name{font-size:.95rem;font-weight:700;color:var(--ink)}
+.lang-tag{font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;padding:6px 12px;border:1.5px solid var(--border);color:var(--ink-soft);font-weight:700;border-radius:4px}
+html[lang="ar"] .lang-tag { letter-spacing: 0; }
+.lang-tag.native{background:var(--terra);color:#fff;border-color:var(--terra)}
+
+/* قسم التواصل والمراسلة */
+.contact-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:60px;align-items:start}
+.contact-lead{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:700;letter-spacing:-.03em;color:var(--ink);line-height:1.2;margin-bottom:24px}
+html[lang="ar"] .contact-lead { font-family: 'Cairo', sans-serif; letter-spacing: 0; line-height: 1.4;}
+.contact-lead .acc{color:var(--terra)}
+.contact-sub{color:var(--ink-soft);font-size:1rem;line-height:1.7;margin-bottom:32px}
+.c-links{display:flex;flex-direction:column;gap:2px;background:var(--border);border-radius:8px;overflow:hidden}
+.c-link{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;background:var(--card);text-decoration:none;color:var(--ink);font-size:.92rem;font-weight:600;transition:all .2s}
+.c-link:hover{background:var(--terra);color:#fff}
+
+/* تصميم وحالة زر الواتساب في النهار والليل */
+.c-link.whatsapp-link {
+  background: var(--card);
+  color: #25D366;
+  border: 1px solid rgba(37, 211, 102, 0.2);
+}
+body.dark .c-link.whatsapp-link {
+  color: #4AF386; /* لون أخضر أكثر نصوعاً لليل لزيادة التباين */
+}
+.c-link.whatsapp-link:hover {
+  background: var(--whatsapp);
+  color: #fff;
+  border-color: var(--whatsapp);
+}
+
+.c-link-l{display:flex;align-items:center;gap:12px}
+.c-link svg{width:16px;height:16px;flex-shrink:0;stroke-width:2}
+.arr{font-size:1rem;transition:transform .2s}
+.c-link:hover .arr{transform:translateX(5px)}
+html[lang="ar"] .c-link:hover .arr{transform:translateX(-5px)}
+
+.phone-num {
+  direction: ltr !important;
+  display: inline-block;
+}
+
+/* تذييل الصفحة (Footer) */
+footer{border-top:1px solid var(--border);padding:30px 0 100px;position:relative;z-index:1} 
+.footer-in{display:flex;justify-content:space-between;align-items:center}
+.footer-copy{font-size:.8rem;color:var(--ink-soft);font-weight:500}
+.back-top{font-size:.75rem;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-soft);text-decoration:none;transition:color .2s;font-weight:700}
+html[lang="ar"] .back-top { letter-spacing: 0; }
+.back-top:hover{color:var(--terra)}
+
+/* تأثيرات الظهور التدريجي للأقسام */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
+.reveal.vis{opacity:1;transform:translateY(0)}
+
+/* 📱 تحسينات التجاوبية والشاشات الصغيرة والهواتف */
+@media(max-width:991px){
+  .hero-grid{grid-template-columns:1fr;gap:40px;text-align:center}
+  .hero-eyebrow{justify-content:center}
+  .hero-p{margin:0 auto 32px}
+  .hero-btns{justify-content:center}
+  .hero-img-wrap{width:240px; height:240px;}
+  .about-grid, .contact-grid{grid-template-columns:1fr;gap:40px}
+  .skills-grid{grid-template-columns:1fr 1fr}
+  .edu-grid{grid-template-columns:1fr}
+}
+
+@media(max-width:767px){
+  .wrap{padding:0 20px}
+  nav{padding:14px 0}
+  .nav-links{display:none} 
+  .mobile-nav{display:flex} 
+  #hero{padding-top:110px;padding-bottom:50px}
+  .skills-grid{grid-template-columns:1fr}
+  .exp-item{grid-template-columns:1fr;padding:30px 20px;gap:20px}
+  .exp-period{text-align:left}
+  html[lang="ar"] .exp-period { text-align: right; }
+  .edu-card{padding:30px 20px}
+  .footer-in{flex-direction:column;gap:12px;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="wrap nav-in">
+    <a href="#hero" class="logo"><span class="logo-dot"></span><span data-t="nav_logo">Osama</span></a>
+    <ul class="nav-links">
+      <li><a href="#about" data-t="nav_about">About</a></li>
+      <li><a href="#skills" data-t="nav_skills">Skills</a></li>
+      <li><a href="#experience" data-t="nav_exp">Experience</a></li>
+      <li><a href="#education" data-t="nav_edu">Education</a></li>
+      <li><a href="#contact" data-t="nav_contact">Contact</a></li>
+    </ul>
+    <div class="nav-controls">
+      <button class="lang-btn" id="langBtn">AR</button>
+      <button class="theme-btn" id="themeBtn" aria-label="Toggle theme">&#9790;</button>
+    </div>
+  </div>
+</nav>
+
+<!-- شريط التنقل السفلي للهواتف -->
+<div class="mobile-nav">
+  <a href="#about">
+    <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <span data-t="nav_about">About</span>
+  </a>
+  <a href="#skills">
+    <svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+    <span data-t="nav_skills">Skills</span>
+  </a>
+  <a href="#experience">
+    <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+    <span data-t="nav_exp">Exp</span>
+  </a>
+  <a href="#contact">
+    <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+    <span data-t="nav_contact">Contact</span>
+  </a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-eyebrow" data-t="hero_eyebrow">AI QA Engineer &amp; LLM Evaluator</div>
+        <h1 class="hero-h1" id="hero_title_el" data-t="hero_h1">
+          Testing<br/>the minds<br/>of <span class="acc">machines.</span>
+        </h1>
+        <p class="hero-p" data-t="hero_p">Osama Said Mohammed Alhassan Awadalla — bridging software quality assurance and artificial intelligence. Based in Riyadh, Saudi Arabia.</p>
+        <div class="hero-btns">
+          <a href="#contact" class="btn-p">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 7L2 7"/></svg>
+            <span data-t="hero_btn_contact">Get in touch</span>
+          </a>
+        </div>
+      </div>
+      <div class="hero-img-wrap">
+        <img src="profile.jpeg" alt="Osama Said" onerror="this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80';"/>
+        <div class="hero-img-tag" data-t="hero_img_tag">QA / UAT / LLM</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="reveal">
+  <div class="wrap about-grid">
+    <div>
+      <span class="sec-no">01 //</span>
+      <h2 class="sec-title" data-t="about_title">Bridging Human Logic and Machine Minds.</h2>
+      <div class="about-body" id="about_body">
+        <p>I am Osama Said, an IT professional with over 5 years of experience specialized in AI Quality Assurance, LLM evaluation, and prompt optimization. Based in Riyadh, I help organizations build and deploy high-quality, safe, and aligned AI systems.</p>
+        <p>My work combines traditional Software QA methodologies (like functional testing, integration testing, and comprehensive UAT) with advanced AI operations like local deployment using Ollama and rigorous prompt safety testing.</p>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat">
+        <span class="stat-v">5+</span>
+        <span class="stat-l" data-t="stat_exp">Years Experience</span>
+      </div>
+      <div class="stat">
+        <span class="stat-v">150+</span>
+        <span class="stat-l" data-t="stat_uat">UAT Scenarios</span>
+      </div>
+      <div class="stat">
+        <span class="stat-v">2+</span>
+        <span class="stat-l" data-t="stat_degrees">Academic Degrees</span>
+      </div>
+      <div class="stat">
+        <span class="stat-v">100%</span>
+        <span class="stat-l" data-t="stat_qa">QA Standard Focus</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills" class="reveal">
+  <div class="wrap">
+    <span class="sec-no">02 //</span>
+    <h2 class="sec-title" data-t="skills_title">Technical Toolkit &amp; Expertises</h2>
+    
+    <div class="skills-grid">
+      <div class="sk-card">
+        <div class="sk-head">
+          <span data-t="skill_cat_1">Artificial Intelligence</span>
+          AI &amp; LLM Testing
+        </div>
+        <ul class="sk-list" id="skill_list_1">
+          <li>LLM Evaluation & Benchmarking</li>
+          <li>Prompt Engineering & Optimization</li>
+          <li>Prompt Injection & Safety Testing</li>
+          <li>Hallucination Detection</li>
+          <li>Ollama Local Model Deployment</li>
+          <li>Hugging Face Ecosystem</li>
+        </ul>
+      </div>
+      <div class="sk-card">
+        <div class="sk-head">
+          <span data-t="skill_cat_2">Quality Assurance</span>
+          Software QA &amp; UAT
+        </div>
+        <ul class="sk-list" id="skill_list_2">
+          <li>User Acceptance Testing (UAT)</li>
+          <li>Functional & Regression Testing</li>
+          <li>API Testing (Postman / REST APIs)</li>
+          <li>Test Planning & Execution</li>
+          <li>Defect Tracking & RCA</li>
+          <li>Agile / Scrum Methodologies</li>
+        </ul>
+      </div>
+      <div class="sk-card">
+        <div class="sk-head">
+          <span data-t="skill_cat_3">Development & Ops</span>
+          Tools &amp; Databases
+        </div>
+        <ul class="sk-list" id="skill_list_3">
+          <li>Python (Scripting & Automation)</li>
+          <li>SQL & SQL Server</li>
+          <li>Git, GitHub & VS Code</li>
+          <li>Business & Requirements Analysis</li>
+          <li>Power BI & Qlik Sense</li>
+          <li>Technical Governance Doc</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience" class="reveal">
+  <div class="wrap">
+    <span class="sec-no">03 //</span>
+    <h2 class="sec-title" data-t="experience_title">Professional Journey</h2>
+    
+    <div class="exp-list" id="exp_list_container">
+      <!-- Generated dynamically in JS -->
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education" class="reveal">
+  <div class="wrap">
+    <span class="sec-no">04 //</span>
+    <h2 class="sec-title" data-t="edu_title">Education &amp; Languages</h2>
+    
+    <div class="edu-grid">
+      <div class="edu-card">
+        <div class="edu-card-title" data-t="edu_card_title_1">Academic Credentials</div>
+        
+        <div class="edu-entry">
+          <div class="edu-deg" data-t="edu_deg_1">Master of Information Technology</div>
+          <div class="edu-school" data-t="edu_school_1">Al-Neelain University</div>
+          <div class="edu-yr">2016 – 2018</div>
+        </div>
+        
+        <div class="edu-entry">
+          <div class="edu-deg" data-t="edu_deg_2">Bachelor of Information Technology</div>
+          <div class="edu-school" data-t="edu_school_2">National Ribat University</div>
+          <div class="edu-yr">2010 – 2014</div>
+        </div>
+      </div>
+      
+      <div class="edu-card">
+        <div class="edu-card-title" data-t="edu_card_title_2">Language Proficiency</div>
+        <div class="lang-row">
+          <span class="lang-name" data-t="lang_ar_name">Arabic</span>
+          <span class="lang-tag native" data-t="lang_ar_lvl">Native Speaker</span>
+        </div>
+        <div class="lang-row">
+          <span class="lang-name" data-t="lang_en_name">English</span>
+          <span class="lang-tag" data-t="lang_en_lvl">Professional Working</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="reveal">
+  <div class="wrap contact-grid">
+    <div>
+      <span class="sec-no">05 //</span>
+      <h2 class="contact-lead" id="contact_lead">Let's build reliable <span class="acc">AI together.</span></h2>
+      <p class="contact-sub" data-t="contact_sub">Are you looking for an expert to evaluate your generative models, perform rigorous UAT, or safeguard your AI pipelines? Let's connect.</p>
+    </div>
+    <div class="c-links">
+      <a href="https://wa.me/966532811759" target="_blank" class="c-link whatsapp-link">
+        <div class="c-link-l">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.746.953 3.71 1.458 5.704 1.46h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413"/></svg>
+          <span data-t="hero_whatsapp">WhatsApp Chat</span>
+        </div>
+        <span class="arr">&rarr;</span>
+      </a>
+      <a href="mailto:osama.it.100@gmail.com" class="c-link">
+        <div class="c-link-l">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 7L2 7"/></svg>
+          <span>osama.it.100@gmail.com</span>
+        </div>
+        <span class="arr">&rarr;</span>
+      </a>
+      <a href="tel:+966532811759" class="c-link">
+        <div class="c-link-l">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          <span class="phone-num">+966 53 281 1759</span>
+        </div>
+        <span class="arr">&rarr;</span>
+      </a>
+      <a href="https://www.linkedin.com/in/osamasaidmoh" target="_blank" class="c-link">
+        <div class="c-link-l">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          <span>LinkedIn Portfolio</span>
+        </div>
+        <span class="arr">&rarr;</span>
+      </a>
+      <a href="https://github.com/OsamaSaid100" target="_blank" class="c-link">
+        <div class="c-link-l">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          <span>GitHub Code</span>
+        </div>
+        <span class="arr">&rarr;</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap footer-in">
+    <div class="footer-copy" data-t="footer_copy">&copy; 2026 Osama Said Mohammed. All rights reserved.</div>
+    <a href="#hero" class="back-top" data-t="back_top">Back to top &uarr;</a>
+  </div>
+</footer>
+
+<script>
+const translations = {
+  en: {
+    nav_logo: "Osama",
+    nav_about: "About",
+    nav_skills: "Skills",
+    nav_exp: "Experience",
+    nav_edu: "Education",
+    nav_contact: "Contact",
+    hero_eyebrow: "AI QA Engineer & LLM Evaluator",
+    hero_h1: "Testing<br/>the minds<br/>of <span class=\"acc\">machines.</span>",
+    hero_p: "Osama Said Mohammed Alhassan Awadalla — bridging software quality assurance and artificial intelligence. Based in Riyadh, Saudi Arabia.",
+    hero_btn_contact: "Get in touch",
+    hero_whatsapp: "WhatsApp Chat",
+    hero_img_tag: "QA / UAT / LLM",
+    about_title: "Bridging Human Logic and Machine Minds.",
+    about_p1: "I am Osama Said, an IT professional with over 5 years of experience specialized in AI Quality Assurance, LLM evaluation, and prompt optimization. Based in Riyadh, I help organizations build and deploy high-quality, safe, and aligned AI systems.",
+    about_p2: "My work combines traditional Software QA methodologies (like functional testing, integration testing, and comprehensive UAT) with advanced AI operations like local deployment using Ollama and rigorous prompt safety testing.",
+    stat_exp: "Years Experience",
+    stat_uat: "End-to-End UAT Scenarios",
+    stat_degrees: "Academic Degrees",
+    stat_qa: "QA Standard Focus",
+    skills_title: "Technical Toolkit & Expertises",
+    skill_cat_1: "Artificial Intelligence",
+    skill_cat_2: "Quality Assurance",
+    skill_cat_3: "Development & Ops",
+    experience_title: "Professional Journey",
+    edu_title: "Education & Languages",
+    edu_card_title_1: "Academic Credentials",
+    edu_card_title_2: "Language Proficiency",
+    edu_deg_1: "Master of Information Technology",
+    edu_school_1: "Al-Neelain University",
+    edu_deg_2: "Bachelor of Information Technology",
+    edu_school_2: "National Ribat University",
+    lang_ar_name: "Arabic",
+    lang_ar_lvl: "Native Speaker",
+    lang_en_name: "English",
+    lang_en_lvl: "Professional Working",
+    contact_lead: "Let's build reliable <span class=\"acc\">AI together.</span>",
+    contact_sub: "Are you looking for an expert to evaluate your generative models, perform rigorous UAT, or safeguard your AI pipelines? Let's connect.",
+    footer_copy: "&copy; 2026 Osama Said Mohammed. All rights reserved.",
+    back_top: "Back to top ↑"
+  },
+  ar: {
+    nav_logo: "أسامة",
+    nav_about: "عني",
+    nav_skills: "المهارات",
+    nav_exp: "الخبرة",
+    nav_edu: "التعليم",
+    nav_contact: "اتصل بي",
+    hero_eyebrow: "مهندس جودة ذكاء اصطناعي ومقيم نماذج لغوية (LLM)",
+    hero_h1: "نختبر عقول<br/><span class=\"acc\">الآلات</span> بدقة<br/>واحترافية.",
+    hero_p: "أسامة سيد محمد الحسن عوض الله — شغوف بالربط بين هندسة جودة البرمجيات التقليدية وتطبيقات الذكاء الاصطناعي المتقدمة. مقيم في الرياض، المملكة العربية السعودية.",
+    hero_btn_contact: "اتصل بي",
+    hero_whatsapp: "محادثة واتساب",
+    hero_img_tag: "جودة / اختبار قبول / ذكاء اصطناعي",
+    about_title: "الربط بين المنطق البشري وعقول الآلات.",
+    about_p1: "أنا أسامة سيد، متخصص في تكنولوجيا المعلومات بخبرة تزيد عن 5 سنوات في مجالات هندسة جودة البرمجيات (QA)، واختبار قبول المستخدم (UAT)، مع تخصص دقيق وشغف كامل في هندسة جودة الذكاء الاصطناعي وتقييم النماذج اللغوية الكبيرة (LLMs).",
+    about_p2: "يجمع أسلوب عملي بين المنهجيات التقليدية الدقيقة لضمان جودة الأنظمة وقبولها من قبل المستخدم النهائي، وبين ممارسات عمليات الذكاء الاصطناعي (AI Ops) مثل النشر المحلي للنماذج باستخدام Ollama، واختبارات الأوامر ضد الاختراق، وتقليل الهلوسة البرمجية والانحياز للنماذج.",
+    stat_exp: "سنوات الخبرة",
+    stat_uat: "سيناريوهات اختبار قبول شاملة ومتكاملة",
+    stat_degrees: "مؤهلات أكاديمية",
+    stat_qa: "تركيز كامل على معايير الجودة",
+    skills_title: "الحقيبة التقنية والمهارات المهنية",
+    skill_cat_1: "الذكاء الاصطناعي",
+    skill_cat_2: "هندسة الجودة وUAT",
+    skill_cat_3: "التطوير والعمليات",
+    experience_title: "الرحلة المهنية والأدوار السابقة",
+    edu_title: "التعليم واللغات والقدرات",
+    edu_card_title_1: "المؤهلات الأكاديمية",
+    edu_card_title_2: "اللغات والقدرات التواصلية",
+    edu_deg_1: "ماجستير تكنولوجيا المعلومات",
+    edu_school_1: "جامعة النيلين",
+    edu_deg_2: "بكالوريوس تكنولوجيا المعلومات",
+    edu_school_2: "جامعة الرباط الوطني",
+    lang_ar_name: "العربية",
+    lang_ar_lvl: "اللغة الأم",
+    lang_en_name: "الإنجليزية",
+    lang_en_lvl: "مستوى احترافي للعمل",
+    contact_lead: "لنصنع ذكاءً اصطناعياً <span class=\"acc\">موثوقاً وآمناً معاً.</span>",
+    contact_sub: "هل تبحث عن مهندس خبير لتقييم النماذج التوليدية لديك، تخطيط سيناريوهات الـ UAT، أو حماية واجهات ومسارات الذكاء الاصطناعي من الثغرات? تواصل معي اليوم.",
+    footer_copy: "&copy; 2026 أسامة سيد محمد. جميع الحقوق محفوظة.",
+    back_top: "العودة للأعلى ↑"
+  }
+};
+
+const skillLists = {
+  en: {
+    list_1: [
+      "LLM Evaluation & Benchmarking",
+      "Prompt Engineering & Optimization",
+      "Prompt Injection & Safety Testing",
+      "Hallucination Detection & Mitigation",
+      "Ollama Local Model Deployment",
+      "Hugging Face Ecosystem & Hub"
+    ],
+    list_2: [
+      "User Acceptance Testing (UAT)",
+      "Functional & Regression Testing",
+      "API Testing (Postman / REST APIs)",
+      "Test Planning & Cases Design",
+      "Defect Tracking & RCA",
+      "Agile / Scrum Methodologies"
+    ],
+    list_3: [
+      "Python (Scripting & Automation)",
+      "SQL & SQL Server Databases",
+      "Git, GitHub & VS Code Tools",
+      "Business & Requirements Analysis",
+      "Microsoft Power BI & Qlik Sense",
+      "Technical Governance Documentation"
+    ]
+  },
+  ar: {
+    list_1: [
+      "تقييم ومقارنة أداء النماذج اللغوية (LLM)",
+      "هندسة الأوامر وهيكلتها لتحقيق أفضل أداء",
+      "اختبارات الاختراق واختراق التعليمات للأوامر (Prompt Injection)",
+      "كشف الهلوسة في نماذج التوليد والحد من الانحياز",
+      "نشر النماذج محلياً وبيئات التشغيل عبر Ollama",
+      "التعامل مع نماذج Hugging Face ومستودعاتها"
+    ],
+    list_2: [
+      "اختبارات قبول المستخدم الشاملة (UAT)",
+      "الاختبارات الوظيفية واختبارات التراجع (Regression)",
+      "فحص واجهات برمجة التطبيقات (API Testing) عبر Postman",
+      "تخطيط وتصميم وتنفيذ سيناريوهات فحص الجودة",
+      "تتبع المشكلات التقنية وتحليل الأسباب الجذرية (RCA)",
+      "منهجيات العمل المرنة (Agile / Scrum)"
+    ],
+    list_3: [
+      "لغة بايثون للبرمجة والأتمتة النصية",
+      "إدارة قواعد البيانات ولغة الاستعلام SQL Server",
+      "استخدام أدوات التطوير والتحكم Git, GitHub & VS Code",
+      "تحليل الأعمال والاحتياجات البرمجية وتوثيقها",
+      "بناء لوحات قياس البيانات بـ Power BI و Qlik Sense",
+      "كتابة الوثائق الفنية والحوكمة التقنية للمشاريع"
+    ]
+  }
+};
+
+const experienceData = {
+  en: [
+    {
+      role: "Associate Digital Product Manager (APM)",
+      company: "National Center for Water Efficiency (MAEE)",
+      location: "Riyadh, Saudi Arabia",
+      period: "Jul 2025 – Present",
+      note: "Previously: Senior Information Technology Consultant",
+      resp: [
+        "Led the development and enhancement of the MAEE Water Consumption Monitoring Platform for government entities.",
+        "Collaborated in developing internal business intelligence dashboards to support data-driven decision-making.",
+        "Validated software functionality, system integrations, and deployment readiness against business and technical requirements.",
+        "Evaluated AI-powered automation tools and enterprise software solutions to improve operational efficiency.",
+        "Produced technical governance documentation and collaborated with cross-functional teams throughout the SDLC.",
+        "Contributed to software quality assurance, release readiness, and continuous product improvement."
+      ]
+    },
+    {
+      role: "Business Analyst",
+      company: "Modern Collectibles",
+      location: "Riyadh, Saudi Arabia",
+      period: "Aug 2021 – Jul 2025",
+      resp: [
+        "Contributed to the development and enhancement of e-commerce platforms and mobile applications by gathering business requirements and validating delivered features.",
+        "Designed and executed 150+ User Acceptance Testing (UAT) scenarios across multiple software releases.",
+        "Identified software defects, collaborated with development teams, and verified fixes before production deployments.",
+        "Produced business requirements, functional specifications, and validation documentation.",
+        "Supported Agile development, release planning, and continuous software quality improvement."
+      ]
+    },
+    {
+      role: "IT Business Analyst",
+      company: "The WolfeX",
+      location: "Riyadh, Saudi Arabia",
+      period: "Jun 2024 – Nov 2024",
+      resp: [
+        "Conducted User Acceptance Testing and software validation activities.",
+        "Coordinated Agile testing cycles with engineering and product teams.",
+        "Assisted in feature verification, issue tracking, and deployment readiness."
+      ]
+    }
+  ],
+  ar: [
+    {
+      role: "مدير منتج رقمي مشارك (APM)",
+      company: "المركز الوطني لكفاءة ترشيد المياه (مائي)",
+      location: "الرياض، المملكة العربية السعودية",
+      period: "يوليو 2025 – حتى الآن",
+      note: "سابقاً: مستشار تقنية معلومات أول بالمركز",
+      resp: [
+        "قيادة وتطوير وتحسين منصة مراقبة استهلاك المياه للجهات الحكومية التابعة لمركز (مائي).",
+        "المساهمة بفعالية في تطوير لوحات ذكاء الأعمال (BI Dashboards) الداخلية لدعم اتخاذ القرارات القائمة على البيانات الفورية.",
+        "التحقق من الكفاءة الوظيفية للبرمجيات وتكامل الأنظمة وجاهزية النشر ومطابقتها للمتمتطلبات الفنية للأعمال.",
+        "تقييم أدوات الأتمتة المعتمدة على الذكاء الاصطناعي وحلول الأنظمة والبرمجيات لرفع الكفاءة التشغيلية للمركز.",
+        "صياغة وإنتاج وثائق الحوكمة الفنية والتقنية والتعاون مع فرق العمل المشتركة خلال دورة حياة تطوير البرمجيات (SDLC).",
+        "المساهمة في ضمان جودة الأنظمة البرمجية، التحقق من جاهزية الإطلاق، والعمل المستمر على تحسين جودة المنتجات الرقمية."
+      ]
+    },
+    {
+      role: "محلل أعمال (Business Analyst)",
+      company: "Modern Collectibles",
+      location: "الرياض، المملكة العربية السعودية",
+      period: "أغسطس 2021 – يوليو 2025",
+      resp: [
+        "المساهمة في تطوير وتحسين منصات التجارة الإلكترونية وتطبيقات الأجهزة المحمولة من خلال جمع المتطلبات وهندستها وفحص الميزات المسلّمة.",
+        "تصميم وتخطيط وتنفيذ أكثر من 150 سيناريو لاختبار قبول المستخدم (UAT) في إصدارات متعددة من المنصة.",
+        "اكتشاف وتوثيق العيوب والمشاكل البرمجية وتصنيفها، والعمل المباشر مع فريق التطوير لإصلاحها قبل النشر الفعلي في بيئة العمل.",
+        "إنتاج وثائق متطلبات الأعمال، والمواصفات الوظيفية الدقيقة، بالإضافة إلى صياغة سجلات التحقق من الكفاءة.",
+        "دعم وإدارة بيئة عمل التطوير المرن (Agile) والمشاركة بفعالية في التخطيط للإطلاقات الدورية للمنتج البرمجي."
+      ]
+    },
+    {
+      role: "محلل أعمال تقنية معلومات (IT Business Analyst)",
+      company: "The WolfeX",
+      location: "الرياض، المملكة العربية السعودية",
+      period: "يونيو 2024 – نوفمبر 2024",
+      resp: [
+        "تخطيط وتنفيذ سيناريوهات فحص الجودة واختبارات قبول المستخدم النهائي (UAT) بنجاح.",
+        "تنسيق دورات فحص البرمجيات وإدارة المهام المرنة بالتنسيق المباشر مع فرق الهندسة التقنية وفريق إدارة المنتج.",
+        "المساعدة الفعالة في مراجعة الميزات والوظائف وتتبع المشكلات وجاهزية النشر على الخوادم الحية."
+      ]
+    }
+  ]
+};
+
+let currentLang = 'en';
+const themeBtn = document.getElementById('themeBtn');
+const langBtn = document.getElementById('langBtn');
+
+themeBtn.addEventListener('click', () => {
+  document.body.classList.toggle('dark');
+  themeBtn.innerHTML = document.body.classList.contains('dark') ? '&#9788;' : '&#9790;';
+});
+
+langBtn.addEventListener('click', () => {
+  const nextLang = currentLang === 'en' ? 'ar' : 'en';
+  setLanguage(nextLang);
+});
+
+function setLanguage(lang) {
+  currentLang = lang;
+  document.documentElement.setAttribute('lang', lang);
+  document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+  langBtn.textContent = lang === 'en' ? 'AR' : 'EN';
+  
+  document.querySelectorAll('[data-t]').forEach(el => {
+    const key = el.getAttribute('data-t');
+    if (translations[lang][key]) {
+      el.innerHTML = translations[lang][key];
+    }
+  });
+
+  document.getElementById('contact_lead').innerHTML = translations[lang]['contact_lead'];
+  
+  const aboutBody = document.getElementById('about_body');
+  aboutBody.innerHTML = `
+    <p>${translations[lang]['about_p1']}</p>
+    <p>${translations[lang]['about_p2']}</p>
+  `;
+
+  for (let i = 1; i <= 3; i++) {
+    const skillListEl = document.getElementById(`skill_list_${i}`);
+    skillListEl.innerHTML = '';
+    skillLists[lang][`list_${i}`].forEach(item => {
+      const li = document.createElement('li');
+      li.textContent = item;
+      skillListEl.appendChild(li);
+    });
+  }
+
+  const expContainer = document.getElementById('exp_list_container');
+  expContainer.innerHTML = '';
+  experienceData[lang].forEach(exp => {
+    const item = document.createElement('div');
+    item.className = 'exp-item';
+    let noteHTML = exp.note ? `<div class="exp-note">${exp.note}</div>` : '';
+    let respHTML = exp.resp.map(r => `<li>${r}</li>`).join('');
+    
+    item.innerHTML = `
+      <div>
+        <h3 class="exp-role">${exp.role}</h3>
+        <div class="exp-co">${exp.company}</div>
+        ${noteHTML}
+        <div class="exp-loc">${exp.location}</div>
+        <ul class="exp-resp">${respHTML}</ul>
+      </div>
+      <div class="exp-period">${exp.period}</div>
+    `;
+    expContainer.appendChild(item);
+  });
+}
+
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 50) {
+    nav.classList.add('scrolled');
+  } else {
+    nav.classList.remove('scrolled');
+  }
+});
+
+const mobileLinks = document.querySelectorAll('.mobile-nav a');
+const sections = document.querySelectorAll('section');
+
+const revealAndActiveScroll = () => {
+  let scrollPos = window.scrollY + 200;
+  
+  sections.forEach(el => {
+    const windowHeight = window.innerHeight;
+    const elementTop = el.getBoundingClientRect().top;
+    const elementVisible = 120;
+    if (elementTop < windowHeight - elementVisible) {
+      el.classList.add('vis');
+    }
+    
+    let id = el.getAttribute('id');
+    if (scrollPos >= el.offsetTop && scrollPos < el.offsetTop + el.offsetHeight) {
+      mobileLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${id}`) {
+          link.classList.add('active');
+        }
+      });
+    }
+  });
+};
+
+window.addEventListener('scroll', revealAndActiveScroll);
+window.addEventListener('load', () => {
+  revealAndActiveScroll();
+  setLanguage('en'); 
+});
+</script>
+</body>
+</html>
